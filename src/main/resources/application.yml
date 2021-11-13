@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: 437101.sl
+    url: jdbc:mysql://localhost:3306/music?characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
+    type: com.alibaba.druid.pool.DruidDataSource
+  jackson:
+    date-format: yyyy-MM-dd hh:mm:ss
+
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true #开启缓存
+    lazy-loading-enabled: true #开启懒加载
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.lei.music.bean
+
+#logging:
+#  level:
+#    com.lei.music.dao: debug
+logging:
+#  path: /Users/Administrator/Desktop/杂七杂八/ims #日志文件路径
+#  file: ims.log #日志文件名称
+  level:
+      com.lei.music.dao: debug #日志级别 root表示所有包，也可以单独配置具体包 fatal error warn info debug trace off
+  pattern:
+    #       console: "%d{yyyy/MM/dd-HH:mm:ss} %-5level %logger- %msg%n"
+    console: "%d - %msg%n"
+
+
+

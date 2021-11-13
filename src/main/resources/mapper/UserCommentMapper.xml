@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lei.music.dao.UserCommentMapper">
+
+<select id="queryOne" resultType="integer">
+    select count(*) from user_comment where user_id = #{userId} and comment_id = #{commentId}
+</select>
+
+    <insert id="insert">
+        insert into user_comment(user_id,comment_id) values (#{userId},#{commentId})
+    </insert>
+
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lei.music.dao.CommentMapper">
+    <resultMap id="BaseResultType" type="comment">
+        <id column="id" property="id" jdbcType="INTEGER"></id>
+        <result column="user_id" jdbcType="INTEGER" property="userId"></result>
+        <result column="type" jdbcType="BIT" property="type"></result>
+        <result column="song_id" jdbcType="INTEGER" property="songId"></result>
+        <result column="song_list_id" jdbcType="INTEGER" property="songListId"></result>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"></result>
+        <result column="content" jdbcType="LONGVARCHAR" property="content"></result>
+        <result column="up" jdbcType="INTEGER" property="up"></result>
+    </resultMap>
+
+<!--    添加评论-->
+    <insert id="add" parameterType="comment">
+        insert into comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="songId != null">
+                song_id,
+            </if>
+            <if test="songListId != null">
+                song_list_id,
+            </if>
+            create_time,
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="songId != null">
+                #{songId},
+            </if>
+            <if test="songListId != null">
+                #{songListId},
+            </if>
+            now(),
+            <if test="content != null">
+                #{content},
+            </if>
+        </trim>
+    </insert>
+
+<!--    查询所有评论-->
+    <select id="queryAll" resultType="comment">
+        select id,user_id,create_time,content,up from comment where
+        <if test="type == 0">
+            song_id = #{id}
+        </if>
+        <if test="type == 1">
+            song_list_id = #{id}
+        </if>
+    </select>
+
+<!--       更新-->
+    <update id="update" parameterType="comment">
+        update comment
+        <trim prefix="set" suffixOverrides=",">
+            <if test="content != null">
+                content = #{content}
+            </if>
+            <if test="up!=null">
+                up = #{up}
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+<!--    查询歌单的评论-->
+    <select id="queryComment" resultType="comment">
+        select * from comment where song_list_id = #{id}
+    </select>
+
+<!--    删除某个评论-->
+    <delete id="delete">
+        delete from comment where id = #{id}
+    </delete>
+</mapper>

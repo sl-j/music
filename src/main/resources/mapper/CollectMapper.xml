@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lei.music.dao.CollectMapper">
+
+    <resultMap id="BaseResultType" type="collect">
+        <id property="id" jdbcType="INTEGER" column="id"></id>
+        <result property="userId" jdbcType="INTEGER" column="user_id"></result>
+        <result property="type" jdbcType="BIT" column="type"></result>
+        <result property="songId" jdbcType="INTEGER" column="song_id"></result>
+        <result property="songListId" jdbcType="INTEGER" column="song_list_id"></result>
+        <result property="createTime" jdbcType="TIMESTAMP" column="create_time"></result>
+    </resultMap>
+
+<!--收藏功能-->
+    <insert id="add">
+        insert into collect
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="songId != null">
+                song_id,
+            </if>
+            <if test="songListId != null">
+                song_list_id,
+            </if>
+            create_time,
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="songId != null">
+                #{songId},
+            </if>
+            <if test="songListId != null">
+                #{songListId},
+            </if>
+                 now(),
+        </trim>
+    </insert>
+<!--    查看用户是否收藏某歌曲或某歌单-->
+    <select id="isExist" resultType="integer">
+        select count(*) from collect where
+        user_id = #{userId} and
+        <if test="songId != null">
+            song_id = #{songId}
+        </if>
+        <if test="songListId != null">
+            song_list_id = #{songListId}
+        </if>
+    </select>
+
+<!--    查询用户的收藏列表-->
+    <select id="queryAllByUserId" resultMap="BaseResultType">
+        select * from collect where user_id = #{id}
+    </select>
+
+<!--    删除收藏-->
+    <delete id="delete" parameterType="collect">
+        delete from collect where id = #{id} and
+        <if test="songId != null">
+            song_id = #{songId}
+        </if>
+        <if test="songListId != null">
+            song_list_id = #{songListId}
+        </if>
+    </delete>
+</mapper>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lei.music.dao.ConsumerMapper">
+
+    <resultMap id="BaseResultType" type="consumer">
+        <id column="id" property="id" jdbcType="INTEGER"></id>
+        <result column="username" jdbcType="VARCHAR" property="username"></result>
+        <result column="password" jdbcType="VARCHAR" property="password"></result>
+        <result column="sex" jdbcType="BIT" property="sex"></result>
+        <result column="phone_num" jdbcType="CHAR" property="phoneNum"></result>
+        <result column="email" jdbcType="CHAR" property="email"></result>
+        <result column="birth" jdbcType="TIMESTAMP" property="birth"></result>
+        <result column="introduction" jdbcType="VARCHAR" property="introduction"></result>
+        <result column="location" jdbcType="VARCHAR" property="location"></result>
+        <result column="avator" jdbcType="VARCHAR" property="avator"></result>
+        <result column="create_time" jdbcType="VARCHAR" property="createTime"></result>
+        <result column="update_time" jdbcType="VARCHAR" property="updateTime"></result>
+    </resultMap>
+
+<!--    查询所有用户-->
+    <select id="detail" resultMap="BaseResultType">
+        select * from consumer
+    </select>
+
+<!--    添加用户-->
+    <insert id="add" parameterType="consumer">
+        insert into consumer
+        <trim prefix="(" suffixOverrides="," suffix=")">
+            <if test="username != null">
+                username,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="sex != null">
+            sex,
+            </if>
+            <if test="phoneNum != null">
+            phone_num,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="birth != null">
+                birth,
+            </if>
+            <if test="introduction != null">
+                introduction,
+            </if>
+            <if test="avator != null">
+                avator,
+            </if>
+            <if test="location != null">
+                location,
+            </if>
+            create_time,update_time,
+        </trim>
+        <trim prefix="values (" suffixOverrides="," suffix=")">
+            <if test="username != null">
+                #{username},
+            </if>
+            <if test="password != null">
+                #{password},
+            </if>
+            <if test="sex != null">
+                #{sex},
+            </if>
+            <if test="phoneNum != null">
+                #{phoneNum},
+            </if>
+            <if test="email != null">
+                #{email},
+            </if>
+            <if test="birth != null">
+                #{birth},
+            </if>
+            <if test="introduction != null">
+                #{introduction},
+            </if>
+            <if test="avator != null">
+                #{avator},
+            </if>
+            <if test="location != null">
+                #{location},
+            </if>
+            now(),now(),
+        </trim>
+    </insert>
+
+<!--    更新用户头像-->
+    <update id="updateAvator" parameterType="consumer">
+        update consumer set avator = #{avator},update_time = now()
+        where id = #{id}
+    </update>
+
+<!--    根据用户id查询单个用户-->
+    <select id="queryOne" resultMap="BaseResultType">
+        select * from
+        consumer
+        where id = #{id}
+    </select>
+
+<!--    删除单个用户-->
+    <delete id="delete">
+        delete from consumer where id = #{id}
+    </delete>
+
+<!--    更新用户信息-->
+    <update id="update" parameterType="consumer">
+        update consumer
+        <trim prefix="set" suffixOverrides=",">
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="phoneNum != null">
+                phone_num = #{phoneNum},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="birth != null">
+                birth = #{birth},
+            </if>
+            <if test="introduction != null">
+                introduction = #{introduction},
+            </if>
+            <if test="location != null">
+                location = #{location},
+            </if>
+            update_time = now(),
+        </trim>
+        where id = #{id}
+    </update>
+
+<!--    前端登录功能-->
+    <select id="login" resultType="Integer">
+        select count(*) from consumer where username = #{username} and password = #{password}
+    </select>
+
+<!--    根据用户名查询用户信息-->
+    <select id="queryByUsername" resultMap="BaseResultType">
+        select * from consumer where username = #{username}
+    </select>
+
+
+
+</mapper>

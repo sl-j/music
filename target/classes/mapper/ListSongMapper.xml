@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lei.music.dao.ListSongMapper">
+
+    <resultMap id="BaseResultType" type="com.lei.music.bean.ListSong">
+        <id column="id" jdbcType="INTEGER" property="id"></id>
+        <result column="song_id" jdbcType="INTEGER" property="songId"></result>
+        <result column="song_list_id" jdbcType="INTEGER" property="songListId"></result>
+    </resultMap>
+
+    <select id="queryByListId" resultMap="BaseResultType">
+        select * from
+        list_song where song_list_id = #{id}
+    </select>
+
+    <insert id="add" parameterType="listSong">
+        insert into list_song(song_id,song_list_id)
+        values (#{songId},#{songListId})
+    </insert>
+
+    <delete id="delete">
+        delete from list_song where song_id = #{songId} and song_list_id = #{songListId}
+    </delete>
+</mapper>

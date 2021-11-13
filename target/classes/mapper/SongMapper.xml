@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lei.music.dao.SongMapper">
+
+    <resultMap id="BaseResultType" type="com.lei.music.bean.Song">
+        <id column="id" jdbcType="INTEGER" property="id"></id>
+        <result column="singer_id" jdbcType="INTEGER" property="singerId"></result>
+        <result column="name" jdbcType="VARCHAR" property="name"></result>
+        <result column="introduction" jdbcType="VARCHAR" property="introduction"></result>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"></result>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"></result>
+        <result column="pic" jdbcType="VARCHAR" property="pic"></result>
+        <result column="lyric" jdbcType="LONGVARCHAR" property="lyric"></result>
+        <result column="url" jdbcType="VARCHAR" property="url"></result>
+    </resultMap>
+
+    <!--    在查询歌词时附带其他信息会带来压力，在此只查询歌词-->
+    <resultMap id="LyricResult" type="com.lei.music.bean.Song">
+        <result column="lyric" jdbcType="LONGVARCHAR" property="lyric"></result>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        id,singer_id,name,introduction,create_time,update_time,pic,lyric,url
+    </sql>
+
+    <!--    添加歌曲-->
+    <insert id="add" parameterType="song">
+        insert into song
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="singerId != null">
+                singer_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="introduction != null">
+                introduction,
+            </if>
+            create_time,update_time,
+            <if test="pic != null">
+                pic,
+            </if>
+            <if test="lyric != null">
+                lyric,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="singerId != null">
+                #{singerId},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="introduction != null">
+                #{introduction},
+            </if>
+            now(), now(),
+            <if test="pic != null">
+                #{pic},
+            </if>
+            <if test="lyric != null">
+                #{lyric},
+            </if>
+            <if test="url != null">
+                #{url},
+            </if>
+        </trim>
+
+    </insert>
+
+    <!--    修改歌曲-->
+    <update id="update" parameterType="song">
+        update song
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="introduction != null">
+                introduction = #{introduction},
+            </if>
+            update_time = now(),
+            <if test="lyric != null">
+                lyric = #{lyric},
+            </if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--    更新歌曲文件-->
+    <update id="updateSong" parameterType="song">
+        update song
+        set url = #{url},update_time = now()
+        where id = #{id}
+    </update>
+
+    <!--    更新歌曲图片-->
+    <update id="updateSongPic" parameterType="song">
+        update song
+        set  pic = #{pic},update_time = now()
+        where id = #{id}
+    </update>
+
+    <!--    删除歌曲-->
+    <delete id="delete">
+        delete from song where id = #{id}
+    </delete>
+
+    <!--    查询一个歌曲-->
+    <select id="queryOne" resultMap="BaseResultType">
+        select
+        <include refid="Base_Column_List"></include>
+        from song
+        where id = #{id}
+    </select>
+
+    <!--    查询所有歌曲-->
+    <select id="queryAll" resultMap="BaseResultType">
+        select * from song
+    </select>
+
+<!--    根据歌曲名准确查询歌曲-->
+    <select id="queryByName" resultMap="BaseResultType">
+        select * from song
+        where name = #{name}
+    </select>
+
+    <!--    根据歌手id查询歌曲-->
+    <select id="queryBySingerID" resultMap="BaseResultType">
+        select * from song
+        where singer_id = #{singerId}
+    </select>
+
+<!--    根据歌曲名称模糊查询歌曲-->
+    <select id="queryLikeOfName" resultMap="BaseResultType">
+       select * from song where name like #{name}
+    </select>
+</mapper>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lei.music.dao.SongListMapper">
+
+    <resultMap id="BaseResultType" type="com.lei.music.bean.SongList">
+        <id column="id" jdbcType="INTEGER" property="id"></id>
+        <result column="title" jdbcType="VARCHAR" property="title"></result>
+        <result column="pic" jdbcType="VARCHAR" property="pic"></result>
+        <result column="introduction" jdbcType="LONGVARCHAR" property="introduction"></result>
+        <result column="style" jdbcType="VARCHAR" property="style"></result>
+
+    </resultMap>
+
+
+
+    <sql id="Base_Column_List">
+        id,title,pic,introduction,style
+    </sql>
+    
+<!--    添加歌单-->
+    <insert id="add" parameterType="songList">
+        insert into song_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="pic != null">
+                pic,
+            </if>
+            <if test="introduction != null">
+                introduction,
+            </if>
+            <if test="style != null">
+                style,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="pic != null">
+                #{pic},
+            </if>
+            <if test="introduction != null">
+                #{introduction},
+            </if>
+            <if test="style != null">
+                #{style},
+            </if>
+    </trim>
+
+    </insert>
+
+<!--    编辑歌单-->
+    <update id="update" parameterType="songList">
+        update song_list
+        <trim prefix="set" suffixOverrides=",">
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="pic != null">
+                pic = #{pic},
+            </if>
+            <if test="introduction != null">
+                introduction = #{introduction},
+            </if>
+            <if test="style != null">
+                style = #{style},
+            </if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+
+<!--    更新歌单图片-->
+    <update id="updateSongListPic" parameterType="songList">
+        update song_list
+        set  pic = #{pic}
+        where id = #{id}
+    </update>
+
+<!--    删除歌单-->
+    <delete id="delete">
+        delete from song_list where id = #{id}
+    </delete>
+
+<!--    查询一个歌单-->
+    <select id="queryOne" resultMap="BaseResultType">
+        select
+        <include refid="Base_Column_List"></include>
+        from song_list
+        where id = #{id}
+    </select>
+
+<!--    查询所有歌单-->
+    <select id="queryAll" resultMap="BaseResultType">
+        select * from song_list
+    </select>
+
+<!--    根据歌手id查询歌曲-->
+    <select id="queryBySingerID" resultMap="BaseResultType">
+        select * from song
+        where singer_id = #{singerId}
+    </select>
+
+<!--    根据歌单名称模糊查询歌单-->
+    <select id="queryByTitle" resultMap="BaseResultType">
+        select * from song_list where title like #{title}
+    </select>
+
+<!--    根据歌单风格模糊查询歌单-->
+    <select id="queryByStyle" resultMap="BaseResultType">
+        select * from song_list
+        where style like #{style}
+    </select>
+
+<!--    根据歌单id查询歌单内的歌曲id-->
+    <select id="querySongId" resultType="integer">
+        select song_id from list_song where song_list_id = #{id}
+    </select>
+
+</mapper>

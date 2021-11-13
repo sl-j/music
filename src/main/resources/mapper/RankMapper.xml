@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lei.music.dao.RankMapper">
+
+    <resultMap id="BaseResultType" type="com.lei.music.bean.Rank">
+        <id column="id" jdbcType="INTEGER" property="id"></id>
+        <result column="song_list_id" jdbcType="INTEGER" property="songListId"></result>
+        <result column="user_id" jdbcType="INTEGER" property="userId"></result>
+        <result column="score" jdbcType="INTEGER" property="score"></result>
+    </resultMap>
+
+<!--    添加评分-->
+    <insert id="add" >
+        insert  into ranks
+        <trim prefix="(" suffixOverrides="," suffix=")">
+            <if test="songListId!= null">
+                song_list_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="score != null">
+                score,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="songListId!= null">
+                #{songListId},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="score != null">
+                #{score},
+            </if>
+        </trim>
+    </insert>
+
+<!--    根据歌单id和顾客id查询（在评分前，判断用户是否已经评价过该歌单）-->
+    <select id="queryBySId" resultType="integer">
+        select count(*) from ranks where song_list_id = #{songListId} and user_id = #{userId}
+    </select>
+
+<!--    获取歌单的总评分-->
+    <select id="scoreAll" resultType="integer">
+        select sum(score) from ranks where song_list_id = #{songListId}
+    </select>
+
+<!--    获取歌单的评价总人数-->
+    <select id="numAll" resultType="integer">
+        select count(*) from ranks where song_list_id = #{songListId}
+    </select>
+
+
+
+</mapper>
